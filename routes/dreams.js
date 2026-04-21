@@ -2,13 +2,14 @@ import express from 'express';
 import { getDatabase } from '../config/database.js';
 import { getDreamInterpretation } from '../utils/ai-openai.js'; // or '../utils/ai-gemini.js' if using Gemini
 import { validateText } from '../utils/validateText.js'
+import pool from './database.js';
+const db = await pool.connect();
 
 const router = express.Router();
 
 // Get all dreams
 router.get('/', async (req, res) => {
   try {
-    const db = await getDatabase();
     const result = await db.all('SELECT * FROM dreams ORDER BY created_at DESC');
     res.json(result);
   } catch (error) {
